@@ -227,25 +227,28 @@ let groundY = canvas.height - 80;
 function drawButterfly() {
     ctx.save();
     ctx.imageSmoothingEnabled = false;
+
+    // scale AFTER translating to butterfly position
     const scale = 2;
+    ctx.translate(butterfly.x, butterfly.y);
     ctx.scale(scale, scale);
 
-    const pixelX = Math.floor(butterfly.x / scale);
-    const pixelY = Math.floor(butterfly.y / scale);
-
-    const pixels = [ /* (pixel array unchanged) */ ];
+    const pixels = [ 
+        // your pixel data (unchanged)
+    ];
 
     const colors = ['transparent', '#FF8C00', '#FFD700', '#FFA500', '#2F2F2F'];
 
     for (let y = 0; y < pixels.length; y++) {
         for (let x = 0; x < pixels[y].length; x++) {
-            const c = pixels[y][x];
-            if (c > 0) {
-                ctx.fillStyle = colors[c];
-                ctx.fillRect(pixelX + x, pixelY + y, 1, 1);
+            const color = pixels[y][x];
+            if (color > 0) {
+                ctx.fillStyle = colors[color];
+                ctx.fillRect(x, y, 1, 1);
             }
         }
     }
+
     ctx.restore();
 }
 
