@@ -1,208 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZAMA Poppy Hop</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZAMA Poppy Hop</title>
 
-        .instructions {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            color: #333;
-            font-size: 16px;
-            z-index: 10;
-        }
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
-            overflow: hidden;
-            touch-action: manipulation;
-            user-select: none;
-        }
+    .instructions {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        color: #333;
+        font-size: 16px;
+        z-index: 10;
+    }
 
-        #gameContainer {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 100%);
+        overflow: hidden;
+        touch-action: manipulation;
+        user-select: none;
+    }
 
-        #gameCanvas {
-            display: block;
-            background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 70%, #90EE90 100%);
-        }
+    #gameContainer {
+        position: relative;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
 
-        .ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            color: #333;
-            font-size: 20px;
-            font-weight: bold;
-            z-index: 10;
-        }
+    #gameCanvas {
+        display: block;
+        background: linear-gradient(to bottom, #87CEEB 0%, #98FB98 70%, #90EE90 100%);
+    }
 
-        .title {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            text-align: right;
-            color: #333;
-            z-index: 10;
-        }
+    .ui {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #333;
+        font-size: 20px;
+        font-weight: bold;
+        z-index: 10;
+    }
 
-        .title h1 {
-            font-size: 24px;
-            margin: 0;
-            font-weight: bold;
-        }
+    .title {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        text-align: right;
+        color: #333;
+        z-index: 10;
+    }
 
-        .title p {
-            font-size: 12px;
-            margin: 5px 0 0 0;
-            color: #666;
-        }
+    .title h1 {
+        font-size: 24px;
+        margin: 0;
+        font-weight: bold;
+    }
 
-        .game-over {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            color: #333;
-            z-index: 10;
-            display: none;
-        }
+    .title p {
+        font-size: 12px;
+        margin: 5px 0 0 0;
+        color: #666;
+    }
 
-        .game-over h2 {
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
+    .game-over {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #333;
+        z-index: 10;
+        display: none;
+    }
 
-        .game-over p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
+    .game-over h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
 
-        .donate-link {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 16px;
-            transition: background 0.3s;
-        }
+    .game-over p {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
 
-        .donate-link:hover {
-            background: #45a049;
-        }
+    .donate-link {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        font-size: 16px;
+        transition: background 0.3s;
+    }
 
-        .restart-btn {
-            padding: 15px 30px;
-            font-size: 20px;
-            background: #FF6B35;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+    .donate-link:hover {
+        background: #45a049;
+    }
 
-        .restart-btn:hover {
-            background: #E55A2B;
-        }
+    .restart-btn {
+        padding: 15px 30px;
+        font-size: 20px;
+        background: #FF6B35;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
 
-        .solidarity-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
-            background-size: 400% 400%;
-            animation: gradientShift 3s ease infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 20;
-            padding: 40px;
-        }
+    .restart-btn:hover {
+        background: #E55A2B;
+    }
 
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-    </style>
+    .solidarity-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1, #96CEB4);
+        background-size: 400% 400%;
+        animation: gradientShift 3s ease infinite;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        z-index: 20;
+        padding: 40px;
+    }
+
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+</style>
+
 </head>
 <body>
-    <div id="gameContainer">
-        <canvas id="gameCanvas"></canvas>
 
-        <div class="solidarity-screen" id="solidarityScreen">
-            <div>
-                <p>In solidarity with the Palestinian people</p>
-                <p>- Love, Zahrat AlHanun Mutual Aid Team</p>
-            </div>
-        </div>
+<div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
 
-        <div class="ui">
-            <div>Score: <span id="score">0</span></div>
-            <div>High Score: <span id="highScore">0</span></div>
-        </div>
-
-        <div class="title">
-            <h1>ZAMA Poppy Hop</h1>
-            <p>Donate to MutualAidGaza.Org</p>
-        </div>
-
-        <div class="game-over" id="gameOver">
-            <h2>Game Over!</h2>
-            <p>Final Score: <span id="finalScore">0</span></p>
-            <a href="https://MutualAidGaza.Org" target="_blank" class="donate-link">Donate to MutualAidGaza.Org</a><br>
-            <button class="restart-btn" onclick="restartGame()">Play Again</button>
-        </div>
-
-        <div class="instructions" id="instructions">
-            <p>Tap to make the butterfly jump over poppies!</p>
+    <div class="solidarity-screen" id="solidarityScreen">
+        <div>
+            <p>In solidarity with the Palestinian people</p>
+            <p>- Love, Zahrat AlHanun Mutual Aid Team</p>
         </div>
     </div>
 
-<script>
-/* --- your JS is unchanged, only formatted --- */
+    <div class="ui">
+        <div>Score: <span id="score">0</span></div>
+        <div>High Score: <span id="highScore">0</span></div>
+    </div>
 
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+    <div class="title">
+        <h1>ZAMA Poppy Hop</h1>
+        <p>Donate to MutualAidGaza.Org</p>
+    </div>
+
+    <div class="game-over" id="gameOver">
+        <h2>Game Over!</h2>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <a href="https://MutualAidGaza.Org" target="_blank" class="donate-link">Donate to MutualAidGaza.Org</a><br>
+        <button class="restart-btn" onclick="restartGame()">Play Again</button>
+    </div>
+
+    <div class="instructions" id="instructions">
+        <p>Tap to make the butterfly jump over poppies!</p>
+    </div>
+</div>
+
+<script>
+
+// ---------------------
+//  CANVAS SETUP
+// ---------------------
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
 
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
+
+// ---------------------
+//  LOAD ANIMATION FRAMES
+// ---------------------
+
+const butterflyFrames = [];
+for (let i = 1; i <= 5; i++) {
+    const img = new Image();
+    img.src = `assets/blue_${i}.png`;
+    butterflyFrames.push(img);
+}
+
+let currentFrame = 0;
+let frameTimer = 0;
+const frameSpeed = 8; // lower = faster animation
+
+// ---------------------
+//  GAME VARIABLES
+// ---------------------
 
 let gameRunning = false;
 let gameStarted = false;
 let score = 0;
-let highScore = parseInt(localStorage.getItem('butterflyHighScore') || '0');
-document.getElementById('highScore').textContent = highScore;
+
+let highScore = parseInt(localStorage.getItem("butterflyHighScore") || "0");
+document.getElementById("highScore").textContent = highScore;
 
 const gravity = 0.6;
 const jumpPower = -12;
@@ -210,126 +236,56 @@ const gameSpeed = 3;
 
 const butterfly = {
     x: 80,
-    y: canvas.height - 150,
-    width: 40,
-    height: 30,
+    y: window.innerHeight - 200,
+    width: 90,
+    height: 80,
     velY: 0,
-    grounded: true,
-    color: '#FF8C00'
+    grounded: true
 };
 
-const obstacles = [];
+let obstacles = [];
 let obstacleTimer = 0;
 let groundY = canvas.height - 80;
 
-/* DRAW FUNCTIONS (unchanged, just cleaned formatting) */
+// ---------------------
+//  DRAWING FUNCTIONS
+// ---------------------
 
 function drawButterfly() {
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-
-    // scale AFTER translating to butterfly position
-    const scale = 2;
-    ctx.translate(butterfly.x, butterfly.y);
-    ctx.scale(scale, scale);
-
-    const pixels = [ 
-        // your pixel data (unchanged)
-    ];
-
-    const colors = ['transparent', '#FF8C00', '#FFD700', '#FFA500', '#2F2F2F'];
-
-    for (let y = 0; y < pixels.length; y++) {
-        for (let x = 0; x < pixels[y].length; x++) {
-            const color = pixels[y][x];
-            if (color > 0) {
-                ctx.fillStyle = colors[color];
-                ctx.fillRect(x, y, 1, 1);
-            }
-        }
+    frameTimer++;
+    if (frameTimer >= frameSpeed) {
+        frameTimer = 0;
+        currentFrame = (currentFrame + 1) % butterflyFrames.length;
     }
-
-    ctx.restore();
+    ctx.drawImage(
+        butterflyFrames[currentFrame],
+        butterfly.x,
+        butterfly.y,
+        butterfly.width,
+        butterfly.height
+    );
 }
 
 function drawPoppy(x, y) {
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-
-    const scale = 4;
-    ctx.scale(scale, scale);
-
-    const pixelX = Math.floor(x / scale);
-    const pixelY = Math.floor(y / scale);
-
-    const pixels = [ /* poppy pixel data unchanged */ ];
-    const colors = ['transparent', '#FF0000', '#CC0000', '#000000', '#228B22'];
-
-    for (let r = 0; r < pixels.length; r++) {
-        for (let c = 0; c < pixels[r].length; c++) {
-            if (pixels[r][c] > 0) {
-                ctx.fillStyle = colors[pixels[r][c]];
-                ctx.fillRect(pixelX + c, pixelY + r, 1, 1);
-            }
-        }
-    }
-
-    ctx.restore();
+    ctx.fillStyle = "red";
+    ctx.beginPath();
+    ctx.arc(x + 15, y + 15, 15, 0, Math.PI * 2);
+    ctx.fill();
 }
 
 function drawGround() {
-    ctx.fillStyle = '#9CAF88';
+    ctx.fillStyle = "#9CAF88";
     ctx.fillRect(0, groundY, canvas.width, canvas.height - groundY);
-    ctx.imageSmoothingEnabled = false;
-    ctx.fillStyle = '#8FBC8F';
-
-    for (let i = 0; i < canvas.width; i += 12) {
-        ctx.fillRect(i, groundY, 3, 8);
-        ctx.fillRect(i + 6, groundY + 2, 3, 6);
-        ctx.fillRect(i + 3, groundY + 4, 3, 4);
-    }
 }
 
-function drawClouds() {
-    ctx.save();
-    ctx.imageSmoothingEnabled = false;
-
-    const scale = 6;
-    ctx.scale(scale, scale);
-
-    const offset = (Date.now() * 0.01) % (canvas.width / scale + 20);
-
-    drawPixelatedCloud(20 - offset, 5);
-    drawPixelatedCloud(60 - offset, 8);
-    drawPixelatedCloud(100 - offset, 6);
-    drawPixelatedCloud(140 - offset, 7);
-
-    ctx.restore();
-}
-
-function drawPixelatedCloud(x, y) {
-    const cloud = [
-        [0,0,1,1,1,0,0],
-        [0,1,1,1,1,1,0],
-        [1,1,1,1,1,1,1],
-        [1,1,1,1,1,1,1],
-        [0,1,1,1,1,1,0]
-    ];
-
-    ctx.fillStyle = '#FFFFFF';
-    for (let r = 0; r < cloud.length; r++) {
-        for (let c = 0; c < cloud[r].length; c++) {
-            if (cloud[r][c] === 1)
-                ctx.fillRect(x + c, y + r, 1, 1);
-        }
-    }
-}
-
-/* GAME LOGIC — unchanged */
+// ---------------------
+//  UPDATE FUNCTIONS
+// ---------------------
 
 function updateButterfly() {
-    if (!butterfly.grounded)
+    if (!butterfly.grounded) {
         butterfly.velY += gravity;
+    }
 
     butterfly.y += butterfly.velY;
 
@@ -351,7 +307,7 @@ function createObstacle() {
     obstacles.push({
         x: canvas.width,
         y: groundY - 30,
-        width: 28,
+        width: 30,
         height: 30
     });
 }
@@ -363,12 +319,12 @@ function updateObstacles() {
         if (obstacles[i].x + obstacles[i].width < 0) {
             obstacles.splice(i, 1);
             score += 10;
-            document.getElementById('score').textContent = score;
+            document.getElementById("score").textContent = score;
         }
     }
 
     obstacleTimer++;
-    if (obstacleTimer > 150 + Math.random() * 90) {
+    if (obstacleTimer > 120 + Math.random() * 60) {
         createObstacle();
         obstacleTimer = 0;
     }
@@ -376,10 +332,12 @@ function updateObstacles() {
 
 function checkCollisions() {
     for (let o of obstacles) {
-        if (butterfly.x < o.x + o.width &&
+        if (
+            butterfly.x < o.x + o.width &&
             butterfly.x + butterfly.width > o.x &&
             butterfly.y < o.y + o.height &&
-            butterfly.y + butterfly.height > o.y) {
+            butterfly.y + butterfly.height > o.y
+        ) {
             gameOver();
         }
     }
@@ -387,14 +345,15 @@ function checkCollisions() {
 
 function gameOver() {
     gameRunning = false;
-    document.getElementById('finalScore').textContent = score;
-    document.getElementById('gameOver').style.display = 'block';
-    document.getElementById('instructions').style.display = 'none';
+
+    document.getElementById("finalScore").textContent = score;
+    document.getElementById("gameOver").style.display = "block";
+    document.getElementById("instructions").style.display = "none";
 
     if (score > highScore) {
         highScore = score;
-        localStorage.setItem('butterflyHighScore', highScore);
-        document.getElementById('highScore').textContent = highScore;
+        localStorage.setItem("butterflyHighScore", highScore);
+        document.getElementById("highScore").textContent = highScore;
     }
 }
 
@@ -402,25 +361,29 @@ function restartGame() {
     gameRunning = true;
     gameStarted = true;
     score = 0;
-    document.getElementById('score').textContent = score;
-    document.getElementById('gameOver').style.display = 'none';
-    document.getElementById('instructions').style.display = 'block';
+
+    document.getElementById("score").textContent = score;
+    document.getElementById("gameOver").style.display = "none";
+    document.getElementById("instructions").style.display = "block";
 
     butterfly.y = groundY - butterfly.height;
     butterfly.velY = 0;
     butterfly.grounded = true;
 
-    obstacles.length = 0;
+    obstacles = [];
     obstacleTimer = 0;
 }
 
+// ---------------------
+//  GAME LOOP
+// ---------------------
+
 function gameLoop() {
-    ctx.fillStyle = '#B8C5A6';
+    ctx.fillStyle = "#B8C5A6";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     groundY = canvas.height - 80;
 
-    drawClouds();
     drawGround();
 
     if (gameRunning) {
@@ -431,13 +394,18 @@ function gameLoop() {
 
     drawButterfly();
 
-    for (let o of obstacles)
-        drawPoppy(o.x, o.y);
+    for (let obs of obstacles) {
+        drawPoppy(obs.x, obs.y);
+    }
 
     requestAnimationFrame(gameLoop);
 }
 
-canvas.addEventListener('click', () => {
+// ---------------------
+//  INPUT HANDLERS
+// ---------------------
+
+canvas.addEventListener("click", () => {
     if (!gameStarted && !gameRunning && obstacles.length === 0) {
         restartGame();
     } else {
@@ -445,7 +413,7 @@ canvas.addEventListener('click', () => {
     }
 });
 
-canvas.addEventListener('touchstart', (e) => {
+canvas.addEventListener("touchstart", (e) => {
     e.preventDefault();
     if (!gameStarted && !gameRunning && obstacles.length === 0) {
         restartGame();
@@ -454,13 +422,17 @@ canvas.addEventListener('touchstart', (e) => {
     }
 });
 
+// Hide intro screen
 setTimeout(() => {
-    document.getElementById('solidarityScreen').style.display = 'none';
+    document.getElementById("solidarityScreen").style.display = "none";
 }, 1500);
 
-document.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+// Prevent mobile scroll
+document.addEventListener("touchmove", (e) => e.preventDefault(), { passive: false });
 
 gameLoop();
+
 </script>
+
 </body>
 </html>
